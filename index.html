@@ -1725,6 +1725,7 @@ async function generateEmails() {
     }
 
     Object.values(containers).forEach(b => b.classList.remove('streaming'));
+    panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
   } catch (err) {
     panel.innerHTML = `<div class="card" style="color:var(--red)">Error: ${err.message}</div>`;
@@ -2036,6 +2037,7 @@ One tight paragraph under 80 words. Tell them exactly how to move forward (conta
       <button class="btn-cream" onclick="switchTab('generator', event)" style="white-space:nowrap;flex-shrink:0">Write Emails &rarr;</button>
     `;
     panel.appendChild(nextBanner);
+    panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
   } catch (err) {
     panel.innerHTML = `<div class="card" style="color:var(--red)">Error: ${err.message}</div>`;
