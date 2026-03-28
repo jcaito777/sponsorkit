@@ -1,0 +1,2191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SponsorKit — by Veracity Vault</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green:   #253C37;
+      --teal:    #6BA89A;
+      --lt-teal: #8FC4BA;
+      --cream:   #F5F3EF;
+      --offblk:  #141413;
+      --muted:   #7A9490;
+      --border:  #D8E4E1;
+      --surface: #FFFFFF;
+      --raised:  #F0EDEA;
+      --input-bg:#FAFAF8;
+      --red:     #C0392B;
+      --amber:   #B45309;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--cream);
+      color: var(--offblk);
+      min-height: 100vh;
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: var(--green);
+      border-bottom: 1px solid var(--border);
+      padding: 0 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 60px;
+    }
+    .logo {
+      font-family: 'Anton', sans-serif;
+      font-size: 20px;
+      letter-spacing: 0.04em;
+      color: var(--cream);
+    }
+    .logo span { color: var(--teal); }
+    .header-tag {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--lt-teal);
+      background: rgba(107,168,154,0.12);
+      border: 1px solid rgba(107,168,154,0.25);
+      padding: 4px 10px;
+      border-radius: 4px;
+    }
+
+    .tab-bar {
+      display: flex;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0 32px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .tab-bar::-webkit-scrollbar { display: none; }
+    .tab-btn {
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      padding: 14px 20px 12px;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: color 0.15s, border-color 0.15s;
+      text-transform: uppercase;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .tab-btn:hover { color: var(--offblk); }
+    .tab-btn.active { color: var(--green); border-bottom-color: var(--green); }
+
+    /* ── LAYOUT ── */
+    .view { display: none; padding: 32px; max-width: 1100px; margin: 0 auto; }
+    .view.active { display: block; }
+
+    /* ── GENERATOR VIEW ── */
+    .single-col {
+      max-width: 780px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .form-row-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 4px;
+    }
+    .form-row-3 input,
+    .form-row-3 textarea { margin-bottom: 0; }
+    .generate-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+    }
+    .generate-row .output-grid {
+      flex: 1;
+      grid-template-columns: repeat(4, 1fr);
+    }
+    .tier-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-bottom: 4px;
+    }
+    .whats-next-banner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      background: var(--green);
+      border-radius: 10px;
+      padding: 20px 24px;
+      margin-top: 8px;
+    }
+    .whats-next-content {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+    .whats-next-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--teal);
+      color: var(--green);
+      font-size: 14px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .whats-next-title {
+      font-family: 'Anton', sans-serif;
+      font-size: 15px;
+      letter-spacing: 0.05em;
+      color: var(--cream);
+      margin-bottom: 5px;
+    }
+    .whats-next-body {
+      font-size: 12px;
+      color: var(--lt-teal);
+      line-height: 1.55;
+    }
+    @media (max-width: 600px) {
+      .whats-next-banner { flex-direction: column; align-items: flex-start; }
+    }
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 24px;
+    }
+    .field-notes-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    @media (max-width: 900px) {
+      .form-row-3 { grid-template-columns: 1fr; }
+      .tier-grid { grid-template-columns: 1fr; }
+      .field-notes-grid { grid-template-columns: 1fr 1fr; }
+      .generate-row { flex-direction: column; }
+      .generate-row .output-grid { grid-template-columns: repeat(2, 1fr); }
+      .generate-row .btn-primary { width: 100%; }
+    }
+    @media (max-width: 600px) {
+      .field-notes-grid { grid-template-columns: 1fr; }
+    }
+      gap: 24px;
+      align-items: start;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 24px;
+    }
+    .card-title {
+      font-family: 'Anton', sans-serif;
+      font-size: 15px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--green);
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    input[type="text"], textarea, select {
+      width: 100%;
+      background: var(--input-bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--offblk);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 14px;
+      padding: 10px 12px;
+      outline: none;
+      transition: border-color 0.15s;
+      margin-bottom: 16px;
+    }
+    input[type="text"]:focus, textarea:focus, select:focus {
+      border-color: var(--teal);
+    }
+    textarea { resize: vertical; }
+    select option { background: var(--surface); color: var(--offblk); }
+
+    /* output type checkboxes */
+    .output-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .check-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--input-bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 8px 10px;
+      cursor: pointer;
+      transition: border-color 0.15s;
+    }
+    .check-item:has(input:checked) { border-color: var(--teal); background: rgba(107,168,154,0.06); }
+    .check-item input { accent-color: var(--teal); width: 14px; height: 14px; cursor: pointer; }
+    .check-item span { font-size: 12px; font-weight: 500; color: var(--offblk); }
+
+    .btn-primary {
+      width: 100%;
+      background: var(--teal);
+      color: var(--offblk);
+      border: none;
+      border-radius: 6px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 13px 20px;
+      cursor: pointer;
+      transition: background 0.15s, opacity 0.15s;
+    }
+    .btn-primary:hover { background: var(--lt-teal); }
+    .btn-primary:disabled { opacity: 0.45; cursor: not-allowed; }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--teal);
+      border: 1px solid var(--teal);
+      border-radius: 6px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 7px 14px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .btn-secondary:hover { background: rgba(107,168,154,0.1); }
+
+    .btn-ghost {
+      background: transparent;
+      border: none;
+      color: var(--muted);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 12px;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 4px;
+      transition: color 0.15s, background 0.15s;
+    }
+    .btn-ghost:hover { color: var(--green); background: rgba(37,60,55,0.06); }
+
+    /* output panel */
+    .output-panel { display: flex; flex-direction: column; gap: 16px; }
+
+    .output-placeholder {
+      background: var(--surface);
+      border: 1px dashed var(--border);
+      border-radius: 8px;
+      padding: 60px 24px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 14px;
+    }
+    .output-placeholder svg { display: block; margin: 0 auto 12px; opacity: 0.3; }
+
+    .output-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .output-section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      background: var(--raised);
+    }
+    .output-section-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--green);
+    }
+    .output-section-body {
+      padding: 16px;
+      font-size: 14px;
+      line-height: 1.7;
+      color: var(--offblk);
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .output-section-body.streaming::after {
+      content: '▋';
+      animation: blink 0.7s infinite;
+      color: var(--teal);
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+    .loading-bar {
+      height: 2px;
+      background: linear-gradient(90deg, var(--teal), var(--lt-teal), var(--teal));
+      background-size: 200% 100%;
+      animation: shimmer 1.4s linear infinite;
+      border-radius: 2px;
+      margin-bottom: 8px;
+    }
+    @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+
+    /* ── TRACKER VIEW ── */
+    .tracker-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      gap: 16px;
+    }
+    .tracker-search {
+      flex: 1;
+      max-width: 280px;
+      margin-bottom: 0;
+    }
+    .tracker-filters {
+      display: flex;
+      gap: 8px;
+    }
+    .filter-pill {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 500;
+      padding: 5px 12px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .filter-pill.active { background: rgba(107,168,154,0.15); border-color: var(--teal); color: var(--green); }
+    .filter-pill:hover { color: var(--green); border-color: var(--teal); }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    th {
+      text-align: left;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+      white-space: nowrap;
+    }
+    td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+      color: var(--offblk);
+      vertical-align: middle;
+    }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: rgba(37,60,55,0.03); }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 3px 9px;
+      border-radius: 12px;
+    }
+    .status-badge::before {
+      content: '';
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+      opacity: 0.8;
+    }
+    .status-not-contacted { color: #4A6380; background: rgba(74,99,128,0.1); }
+    .status-pitched       { color: #92400E; background: rgba(146,64,14,0.1); }
+    .status-committed     { color: #1B5E4A; background: rgba(27,94,74,0.1); }
+    .status-declined      { color: #991B1B; background: rgba(153,27,27,0.1); }
+    .status-follow-up     { color: #2E6B60; background: rgba(46,107,96,0.1); }
+
+    .tier-chip {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 4px;
+      background: rgba(107,168,154,0.12);
+      border: 1px solid rgba(107,168,154,0.3);
+      color: var(--green);
+    }
+
+    /* modal */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.65);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 28px;
+      width: 100%;
+      max-width: 480px;
+      margin: 20px;
+    }
+    .modal-title {
+      font-family: 'Anton', sans-serif;
+      font-size: 16px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--green);
+      margin-bottom: 20px;
+    }
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    .btn-danger {
+      background: var(--red);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 8px 16px;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+    .btn-danger:hover { opacity: 0.85; }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 24px;
+      color: var(--muted);
+    }
+    .empty-state p { font-size: 14px; }
+
+    /* API key banner */
+    .api-banner {
+      background: rgba(180,83,9,0.07);
+      border: 1px solid rgba(180,83,9,0.25);
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-size: 13px;
+      color: #92400E;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .api-banner a { color: inherit; font-weight: 600; }
+
+    .divider { height: 1px; background: var(--border); margin: 12px 0; }
+
+    /* copy toast */
+    #toast {
+      position: fixed;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: var(--green);
+      color: var(--cream);
+      font-size: 13px;
+      font-weight: 600;
+      padding: 10px 20px;
+      border-radius: 6px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+    #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* ── OVERVIEW VIEW ── */
+    .overview-wrap {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 8px 0 40px;
+    }
+    .overview-hero {
+      text-align: center;
+      padding: 40px 24px 36px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 36px;
+    }
+    .overview-logo {
+      font-family: 'Anton', sans-serif;
+      font-size: 32px;
+      letter-spacing: 0.06em;
+      color: var(--green);
+      margin-bottom: 14px;
+    }
+    .overview-logo span { color: var(--teal); }
+    .overview-tagline {
+      font-family: 'Anton', sans-serif;
+      font-size: 17px;
+      letter-spacing: 0.03em;
+      color: var(--offblk);
+      margin-bottom: 14px;
+      line-height: 1.4;
+    }
+    .overview-sub {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.7;
+      max-width: 560px;
+      margin: 0 auto;
+    }
+
+    .overview-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 36px;
+    }
+    .overview-step {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px;
+      cursor: pointer;
+      transition: border-color 0.15s, box-shadow 0.15s, transform 0.1s;
+    }
+    .overview-step:hover {
+      border-color: var(--teal);
+      box-shadow: 0 2px 12px rgba(107,168,154,0.12);
+      transform: translateX(3px);
+    }
+    .step-number {
+      font-family: 'Anton', sans-serif;
+      font-size: 28px;
+      color: var(--border);
+      line-height: 1;
+      flex-shrink: 0;
+      width: 36px;
+    }
+    .step-icon {
+      font-size: 24px;
+      flex-shrink: 0;
+      width: 36px;
+      text-align: center;
+    }
+    .step-content { flex: 1; }
+    .step-title {
+      font-family: 'Anton', sans-serif;
+      font-size: 15px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--green);
+      margin-bottom: 5px;
+    }
+    .step-desc {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+    .step-arrow {
+      font-size: 18px;
+      color: var(--teal);
+      flex-shrink: 0;
+      font-weight: 600;
+      transition: transform 0.15s;
+    }
+    .overview-step:hover .step-arrow { transform: translateX(4px); }
+
+    .overview-cta {
+      text-align: center;
+      padding: 32px 24px;
+      background: var(--raised);
+      border-radius: 10px;
+      border: 1px solid var(--border);
+    }
+    .overview-cta-note {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 12px;
+    }
+    .overview-cta-note a { color: var(--teal); font-weight: 600; text-decoration: none; }
+    .overview-cta-note a:hover { text-decoration: underline; }
+
+    @media (max-width: 600px) {
+      .step-number { display: none; }
+      .overview-step { gap: 12px; }
+    }
+    .finder-intro {
+      max-width: 680px;
+      margin: 0 auto 32px;
+      text-align: center;
+    }
+    .finder-intro h2 {
+      font-family: 'Anton', sans-serif;
+      font-size: 26px;
+      letter-spacing: 0.05em;
+      color: var(--green);
+      margin-bottom: 10px;
+    }
+    .finder-intro p {
+      font-size: 15px;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+    .city-input-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      max-width: 400px;
+      margin: 0 auto;
+    }
+    .city-input-row input {
+      flex: 1;
+      margin-bottom: 0;
+      text-align: center;
+    }
+    .city-hint {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #1B5E4A;
+      white-space: nowrap;
+    }
+
+    .find-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 12px;
+      background: var(--raised);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--green);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 7px 12px;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s;
+      width: 100%;
+      justify-content: center;
+      text-decoration: none;
+      box-sizing: border-box;
+    }
+    .find-btn:hover {
+      background: rgba(107,168,154,0.1);
+      border-color: var(--teal);
+    }
+    .find-btn svg { flex-shrink: 0; }
+
+    .category-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 16px;
+      margin-bottom: 40px;
+    }
+    .category-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .category-card:hover {
+      border-color: var(--teal);
+      box-shadow: 0 2px 12px rgba(107,168,154,0.12);
+    }
+    .category-card-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+    .category-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      background: rgba(107,168,154,0.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 18px;
+    }
+    .category-name {
+      font-family: 'Anton', sans-serif;
+      font-size: 14px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--green);
+    }
+    .category-why {
+      font-size: 13px;
+      color: var(--offblk);
+      line-height: 1.55;
+      margin-bottom: 10px;
+    }
+    .category-tip {
+      font-size: 12px;
+      color: var(--muted);
+      background: var(--raised);
+      border-left: 3px solid var(--teal);
+      padding: 8px 10px;
+      border-radius: 0 6px 6px 0;
+      line-height: 1.5;
+    }
+    .category-tip strong {
+      color: var(--green);
+      font-weight: 600;
+    }
+
+    .finder-cta {
+      background: var(--green);
+      border-radius: 10px;
+      padding: 28px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+    .finder-cta-text h3 {
+      font-family: 'Anton', sans-serif;
+      font-size: 18px;
+      letter-spacing: 0.05em;
+      color: var(--cream);
+      margin-bottom: 6px;
+    }
+    .finder-cta-text p {
+      font-size: 13px;
+      color: var(--lt-teal);
+      line-height: 1.5;
+    }
+    .btn-cream {
+      background: var(--cream);
+      color: var(--green);
+      border: none;
+      border-radius: 6px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 12px 24px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: opacity 0.15s;
+    }
+    .btn-cream:hover { opacity: 0.88; }
+
+    .tier-row {
+      background: var(--raised);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px;
+      margin-bottom: 12px;
+    }
+    .tier-row-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .include-toggle {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--teal);
+      cursor: pointer;
+      user-select: none;
+    }
+    .include-toggle input { accent-color: var(--teal); width: 13px; height: 13px; cursor: pointer; }
+    .addon-toggle { margin-right: 4px; flex-shrink: 0; }
+    .tier-row.excluded {
+      opacity: 0.4;
+      pointer-events: none;
+    }
+    .tier-row.excluded .tier-row-header { pointer-events: all; }
+    .addon-row.excluded {
+      opacity: 0.4;
+    }
+    .addon-row.excluded input[type="text"] { pointer-events: none; }
+    .tier-row-label {
+      font-family: 'Anton', sans-serif;
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--teal);
+    }
+
+    .packet-context-note {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      background: rgba(107,168,154,0.08);
+      border: 1px solid rgba(107,168,154,0.25);
+      border-radius: 6px;
+      padding: 10px 12px;
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.5;
+      margin-bottom: 12px;
+    }
+    .packet-context-note svg { flex-shrink: 0; margin-top: 1px; color: var(--teal); }
+    .packet-context-note strong { color: var(--green); }
+    .packet-usage-note {
+      display: flex;
+      gap: 12px;
+      background: rgba(37,60,55,0.05);
+      border: 1px solid rgba(37,60,55,0.12);
+      border-radius: 8px;
+      padding: 14px;
+      margin-bottom: 16px;
+    }
+    .packet-usage-icon { flex-shrink: 0; color: var(--green); margin-top: 1px; }
+    .packet-usage-title { font-size: 12px; font-weight: 700; color: var(--green); margin-bottom: 4px; }
+    .packet-usage-body { font-size: 12px; color: var(--muted); line-height: 1.55; }
+    .packet-usage-body strong { color: var(--offblk); font-weight: 600; }
+
+    .copy-all-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      background: var(--green);
+      border-radius: 8px;
+      margin-bottom: 12px;
+    }
+    .copy-all-bar span { font-size: 12px; color: var(--lt-teal); }
+    .btn-copy-all {
+      background: var(--cream);
+      color: var(--green);
+      border: none;
+      border-radius: 5px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 6px 14px;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+    .btn-copy-all:hover { opacity: 0.85; }
+
+    .packet-layout {
+      display: grid;
+      grid-template-columns: 360px 1fr 220px;
+      gap: 20px;
+      align-items: start;
+    }
+    .packet-form { min-width: 0; }
+
+    .addon-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .addon-row input { margin-bottom: 0; }
+
+    /* tips sidebar */
+    .tips-sidebar {
+      position: sticky;
+      top: 20px;
+    }
+    .tips-header {
+      font-family: 'Anton', sans-serif;
+      font-size: 13px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--green);
+      margin-bottom: 14px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--teal);
+    }
+    .tip-block {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .tip-number {
+      font-family: 'Anton', sans-serif;
+      font-size: 16px;
+      color: var(--teal);
+      line-height: 1;
+      flex-shrink: 0;
+      padding-top: 1px;
+    }
+    .tip-text {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+    .tip-text strong {
+      display: block;
+      color: var(--offblk);
+      font-weight: 600;
+      margin-bottom: 3px;
+      font-size: 12px;
+    }
+
+    @media (max-width: 1000px) {
+      .packet-layout { grid-template-columns: 1fr; }
+      .tips-sidebar { display: none; }
+    }
+
+    @media (max-width: 600px) {
+      .finder-cta { flex-direction: column; align-items: flex-start; }
+      .category-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 800px) {
+      .gen-grid { grid-template-columns: 1fr; }
+      .tab-bar { padding: 0 4px; }
+      .tab-btn { padding: 12px 10px 10px; font-size: 11px; letter-spacing: 0.02em; }
+      .view { padding: 20px 16px; }
+      header { padding: 0 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">SPONSOR<span>KIT</span></div>
+  <div class="header-tag">by Veracity Vault</div>
+</header>
+
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="switchTab('overview')">Overview</button>
+  <button class="tab-btn" onclick="switchTab('finder')">Find Sponsors</button>
+  <button class="tab-btn" onclick="switchTab('packet')">Build Packet</button>
+  <button class="tab-btn" onclick="switchTab('generator')">Write Emails</button>
+  <button class="tab-btn" onclick="switchTab('tracker')">Track Outreach</button>
+</div>
+
+<!-- ══════════════ OVERVIEW VIEW ══════════════ -->
+<div id="view-overview" class="view active">
+  <div class="overview-wrap">
+
+    <div class="overview-hero">
+      <div class="overview-logo">SPONSOR<span>KIT</span></div>
+      <p class="overview-tagline">The complete sponsorship system for hunting and conservation chapter leaders.</p>
+      <p class="overview-sub">SponsorKit guides you through every step — finding the right businesses to approach, building a professional sponsorship packet, writing outreach emails, and tracking where every conversation stands. Follow the four steps below and you'll have everything you need to run a successful sponsor campaign.</p>
+    </div>
+
+    <div class="overview-steps">
+
+      <div class="overview-step" onclick="switchTab('finder')">
+        <div class="step-number">01</div>
+        <div class="step-icon">🔍</div>
+        <div class="step-content">
+          <div class="step-title">Find Sponsors</div>
+          <div class="step-desc">Not sure who to call? Start here. Browse 12 business categories most likely to say yes to a hunting chapter, with tips on how to approach each one. Enter your city and get a direct Google Maps search for businesses in your area.</div>
+        </div>
+        <div class="step-arrow">→</div>
+      </div>
+
+      <div class="overview-step" onclick="switchTab('packet')">
+        <div class="step-number">02</div>
+        <div class="step-icon">📄</div>
+        <div class="step-content">
+          <div class="step-title">Build Your Packet</div>
+          <div class="step-desc">Build your sponsorship packet before you write a single email. Enter your event details, audience info, and tier structure. The AI writes polished packet copy you can paste into Word, save as a PDF, and send to any interested sponsor.</div>
+        </div>
+        <div class="step-arrow">→</div>
+      </div>
+
+      <div class="overview-step" onclick="switchTab('generator')">
+        <div class="step-number">03</div>
+        <div class="step-icon">✉️</div>
+        <div class="step-content">
+          <div class="step-title">Write Emails</div>
+          <div class="step-desc">Generate personalized pitch emails and subject lines for specific businesses, or a general template to send in bulk. The pitch email opens the door. When someone responds with interest, that's when you send the packet.</div>
+        </div>
+        <div class="step-arrow">→</div>
+      </div>
+
+      <div class="overview-step" onclick="switchTab('tracker')">
+        <div class="step-number">04</div>
+        <div class="step-icon">📋</div>
+        <div class="step-content">
+          <div class="step-title">Track Outreach</div>
+          <div class="step-desc">Log every sponsor you've contacted, what tier you pitched them on, when you last reached out, and where they stand. Keep your entire pipeline in one place so nothing falls through the cracks.</div>
+        </div>
+        <div class="step-arrow">→</div>
+      </div>
+
+    </div>
+
+    <div class="overview-cta">
+      <button class="btn-primary" onclick="switchTab('finder')" style="width:auto;padding:14px 40px;font-size:14px">Start with Find Sponsors &rarr;</button>
+      <p class="overview-cta-note">Already have sponsors in mind? <a href="#" onclick="switchTab('packet');return false;">Skip to Build Packet</a></p>
+    </div>
+
+  </div>
+</div>
+<div id="view-finder" class="view">
+
+  <div class="finder-intro">
+    <h2>Where to Find Sponsors</h2>
+    <p>Not sure who to ask? Start here. These are the businesses most likely to say yes. Enter your city or zip below and every card gets a button that opens a live Google Maps search right in your area.</p>
+    <div class="city-input-row">
+      <input type="text" id="cityInput" placeholder="Enter your city or zip code..." oninput="updateCityButtons()" />
+      <span class="city-hint" id="cityHint" style="display:none">
+        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+        Buttons updated
+      </span>
+    </div>
+  </div>
+
+  <div class="category-grid">
+
+    <div class="category-card">
+      <div class="category-card-header">
+        <div class="category-icon">🔫</div>
+        <div class="category-name">Gun Shops & Firearm Dealers</div>
+      </div>
+      <div class="category-why">Your members are their customers. Gun shops love being associated with organized hunting clubs — it builds loyalty and keeps their name in front of serious buyers year-round.</div>
+      <div class="category-tip"><strong>How to approach:</strong> Walk in and ask for the owner or manager. Introduce yourself as the chapter president. A face-to-face ask closes far better than a cold email.</div>
+      <a class="find-btn" href="https://www.google.com/maps/search/gun+shops+near" target="_blank" rel="noopener noreferrer" data-query="gun shops near">
+        <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        Find gun shops near me
+      </a>
+    </div>
+
+    <div class="category-card">
+      <div class="category-card-header">
+        <div class="category-icon">🦌</div>
+        <div class="category-name">Taxidermists</div>
+      </div>
+      <div class="category-why">Taxidermists depend almost entirely on hunters for their business. Sponsoring your banquet puts their name in front of dozens of potential clients in one room.</div>
+      <div class="category-tip"><strong>How to approach:</strong> Call ahead to make sure they're not swamped in season. Offer a table mention and logo placement — many will donate a mount or gift certificate as in-kind.</div>
+      <a class="find-btn" href="https://www.google.com/maps/search/taxidermist+near" target="_blank" rel="noopener noreferrer" data-query="taxidermist near">
+        <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        Find taxidermists near me
+      </a>
+    </div>
+
+    <div class="category-card">
+      <div class="category-card-header">
+        <div class="category-icon">🏕️</div>
+        <div class="category-name">Outfitters & Guide Services</div>
+      </div>
+      <div class="category-why">Banquets are prime booking season for outfitters. A sponsored table or raffle item gets them in front of people actively planning hunts — it's direct marketing for them.</div>
+      <div class="category-tip"><strong>How to approach:</strong> Email or call with a specific ask — a hunt package for the live auction works extremely well and costs them relatively little upfront.</div>
+      <a class="find-btn" href="https://www.google.com/maps/search/hunting+outfitter+guide+service+near" target="_blank" rel="noopener noreferrer" data-query="hunting outfitter guide service near">
+        <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        Find outfitters near me
+      </a>
+    </div>
+
+    <div class="category-card">
+      <div class="category-card-header">
+        <div class="category-icon">🛻</div>
+        <div class="category-name">Truck & ATV Dealerships</div>
+      </div>
+      <div class="category-why">Hunters buy trucks and ATVs. Dealerships have marketing budgets specifically for community sponsorships. A banquet logo placement and verbal mention reaches exactly their target buyer.</div>
+      <div class="category-tip"><strong>How to approach:</strong> Ask for the fleet or commercial sales manager — they often control the community sponsorship budget. A $500–$1,000 ask is very reasonable for a dealership.</div>
+      <a class="find-btn" href="https://www.google.com/maps/search/truck+dealership+ATV+dealer+near" target="_blank" rel="noopener noreferrer" data-query="truck dealership ATV dealer near">
+        <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        Find dealerships near me
+      </a>
+    </div>
+
+    <div class="category-card">
+      <div class="category-card-header">
+        <div class="category-icon">🎯</div>
+        <div class="category-name">Sporting Goods & Archery Shops</div>
+      </div>
+      <div class="category-why">Local sporting goods stores live or die by their community relationships. Sponsoring your event is one of the best ways they can stay top-of-mind with dedicated hunters.</div>
+      <div class="category-tip"><strong>How to approach:</strong> Ask about an in-kind donation (gear, gift card) in addition to or instead of cash. Many shops prefer this and it makes a great raffle item.</div>
+      <a class="find-btn" href="https://www.google.com/maps/search/sporting+goods+archery+shop+near" target="_blank" rel="noopener noreferrer" data-query="sporting goods archery shop near">
+        <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        Find sporting goods shops near me
+      </a>
+    </div>
+
+    <div class="category-card">
+      <div class="category-card-header">
+        <div class="category-icon">🍺</div>
+        <div class="category-name">Local Restaurants & Breweries</div>
+      </div>
+      <div class="category-why">Restaurants want group business and repeat customers. Sponsoring your banquet — or catering part of it — gets them in front of a room full of locals who dine out regularly.</div>
+      <div class="category-tip"><strong>How to approach:</strong> Talk to the owner, not a manager. Pitch a "presenting sponsor of the dinner" or "official drink sponsor" title — it feels bigger than just a logo.</div>
+      <a class="find-btn" href="https://www.google.com/maps/search/local+restaurant+brewery+near" target="_blank" rel="noopener noreferrer" data-query="local restaurant brewery near">
+        <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        Find restaurants near me
+      </a>
+    </div>
+
+    <div class="category-card">
+      <div class="category-card-header">
+        <div class="category-icon">🏨</div>
+        <div class="category-name">Hotels & Event Venues</div>
+      </div>
+      <div class="category-why">If your banquet is at a hotel, they're already invested. Even if it's not, local hotels want hunting-season bookings and out-of-town guest referrals from your members.</div>
+      <div class="category-tip"><strong>How to approach:</strong> Talk to the sales or events coordinator. Offer to promote them as the "official lodging partner" for your chapter's events throughout the year.</div>
+      <a class="find-btn" href="https://www.google.com/maps/search/hotel+event+venue+near" target="_blank" rel="noopener noreferrer" data-query="hotel event venue near">
+        <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        Find hotels & venues near me
+      </a>
+    </div>
+
+    <div class="category-card">
+      <div class="category-card-header">
+        <div class="category-icon">🌾</div>
+        <div class="category-name">Farm & Ranch Supply Stores</div>
+      </div>
+      <div class="category-why">Many of your members own land, run livestock, or manage properties. Farm supply stores (local or regional) see your chapter as a direct line to their core customer base.</div>
+      <div class="category-tip"><strong>How to approach:</strong> Bring a one-page sponsorship packet. These businesses often have an annual community giving budget — ask early, ideally 3–4 months before your event.</div>
+      <a class="find-btn" href="https://www.google.com/maps/search/farm+ranch+supply+store+near" target="_blank" rel="noopener noreferrer" data-query="farm ranch supply store near">
+        <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        Find farm & ranch stores near me
+      </a>
+    </div>
+
+    <div class="category-card">
+      <div class="category-card-header">
+        <div class="category-icon">🏥</div>
+        <div class="category-name">Local Doctors, Dentists & Attorneys</div>
+      </div>
+      <div class="category-why">Professionals with discretionary income who want community visibility. Many are hunters themselves. A $250–$500 table sponsorship is easy for them and feels personal.</div>
+      <div class="category-tip"><strong>How to approach:</strong> Personal connection is key here. If a member goes to a local dentist or knows an attorney, that warm intro is worth 10 cold calls. Ask your members to make referrals.</div>
+      <a class="find-btn" href="https://www.google.com/maps/search/dentist+doctor+attorney+near" target="_blank" rel="noopener noreferrer" data-query="dentist doctor attorney near">
+        <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        Find local professionals near me
+      </a>
+    </div>
+
+    <div class="category-card">
+      <div class="category-card-header">
+        <div class="category-icon">🔧</div>
+        <div class="category-name">Gunsmiths & Custom Shops</div>
+      </div>
+      <div class="category-why">Specialized craftspeople who rely on referrals from the hunting community. Being associated with your chapter gives them credibility and word-of-mouth they can't buy elsewhere.</div>
+      <div class="category-tip"><strong>How to approach:</strong> Offer a "featured artisan" mention in the program and on social media. Ask if they'd donate a service (cleaning, scope mounting) as a raffle item.</div>
+      <a class="find-btn" href="https://www.google.com/maps/search/gunsmith+firearms+custom+shop+near" target="_blank" rel="noopener noreferrer" data-query="gunsmith firearms custom shop near">
+        <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        Find gunsmiths near me
+      </a>
+    </div>
+
+    <div class="category-card">
+      <div class="category-card-header">
+        <div class="category-icon">🌲</div>
+        <div class="category-name">Land Management & Real Estate</div>
+      </div>
+      <div class="category-why">Land brokers, timber companies, and hunting land specialists want direct access to buyers and landowners in the hunting community. Your banquet puts them in the room.</div>
+      <div class="category-tip"><strong>How to approach:</strong> Pitch a "Land & Conservation Sponsor" title that aligns with your chapter's mission. Frame it as a partnership, not just advertising.</div>
+      <a class="find-btn" href="https://www.google.com/maps/search/hunting+land+real+estate+broker+near" target="_blank" rel="noopener noreferrer" data-query="hunting land real estate broker near">
+        <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        Find land brokers near me
+      </a>
+    </div>
+
+    <div class="category-card">
+      <div class="category-card-header">
+        <div class="category-icon">📸</div>
+        <div class="category-name">Photographers & Videographers</div>
+      </div>
+      <div class="category-why">Local photographers who shoot outdoors, wildlife, or events want exposure in the hunting community. Many will sponsor in exchange for being the official event photographer.</div>
+      <div class="category-tip"><strong>How to approach:</strong> Offer an in-kind trade — they cover the event for free, you promote them as the "official chapter photographer" all year on social media.</div>
+      <a class="find-btn" href="https://www.google.com/maps/search/outdoor+wildlife+photographer+near" target="_blank" rel="noopener noreferrer" data-query="outdoor wildlife photographer near">
+        <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        Find photographers near me
+      </a>
+    </div>
+
+  </div>
+
+  <div class="finder-cta">
+    <div class="finder-cta-text">
+      <h3>Ready to Start Reaching Out?</h3>
+      <p>Pick a business from the list above, then head to the Write Emails tab. Fill in their info and we'll generate a personalized pitch in seconds.</p>
+    </div>
+    <button class="btn-cream" onclick="switchTab('packet', event)">Build Your Packet &rarr;</button>
+  </div>
+
+</div>
+
+<!-- ══════════════ GENERATOR VIEW ══════════════ -->
+<div id="view-generator" class="view">
+  <div class="single-col">
+    <div class="card">
+      <div class="card-title">Chapter & Event</div>
+
+      <div class="form-row-3">
+        <div>
+          <label>Chapter Name</label>
+          <input type="text" id="chapterName" placeholder="e.g. Rocky Mountain Hunters Chapter" />
+        </div>
+        <div>
+          <label>Event Name</label>
+          <input type="text" id="eventName" placeholder="e.g. Annual Banquet & Auction" />
+        </div>
+        <div>
+          <label>Event Date</label>
+          <input type="text" id="eventDate" placeholder="e.g. October 18, 2025" />
+        </div>
+      </div>
+
+      <div class="divider"></div>
+      <div class="card-title" style="margin-top:4px">Sponsor Info</div>
+
+      <div class="form-row-3">
+        <div>
+          <label>Sponsor / Business Name <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted);font-size:10px">— leave blank for a general pitch</span></label>
+          <input type="text" id="sponsorName" placeholder="e.g. High Country Taxidermy" />
+        </div>
+        <div>
+          <label>Contact Name <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted);font-size:10px">— leave blank for a general pitch</span></label>
+          <input type="text" id="contactName" placeholder="e.g. Mike Harlan" />
+        </div>
+        <div>
+          <label>Business Type</label>
+          <input type="text" id="bizType" placeholder="e.g. taxidermist, gun shop, outfitter..." />
+        </div>
+      </div>
+
+      <label>Any custom notes</label>
+      <textarea id="customNotes" rows="2" placeholder="e.g. They sponsored last year. Mutual connection through John at the gun club..."></textarea>
+
+      <div class="divider"></div>
+      <div class="card-title" style="margin-top:4px">Generate</div>
+
+      <div class="generate-row">
+        <div class="output-grid" style="margin-bottom:0">
+          <label class="check-item">
+            <input type="checkbox" id="chk-pitch" checked />
+            <span>Pitch Email</span>
+          </label>
+          <label class="check-item">
+            <input type="checkbox" id="chk-subjects" checked />
+            <span>Subject Lines</span>
+          </label>
+          <label class="check-item">
+            <input type="checkbox" id="chk-followup" />
+            <span>Follow-up Email</span>
+          </label>
+          <label class="check-item" style="border-color:var(--teal);background:rgba(107,168,154,0.05)">
+            <input type="checkbox" id="chk-packet-mention" checked />
+            <span>Mention packet is available</span>
+          </label>
+        </div>
+        <button class="btn-primary" id="generateBtn" onclick="generateEmails()" style="width:auto;padding:13px 32px;white-space:nowrap">Generate Content</button>
+      </div>
+
+      <div class="packet-context-note" style="margin-top:14px;margin-bottom:0">
+        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        <span><strong>How this fits:</strong> The pitch email opens the door. When they respond with interest, that's when you send your sponsorship packet. Build it in the <a href="#" onclick="switchTab('packet');return false;" style="color:var(--teal);font-weight:600;">Build Packet</a> tab.</span>
+      </div>
+    </div>
+
+    <div class="output-panel" id="outputPanel" style="margin-top:0">
+      <div class="output-placeholder" id="outputPlaceholder">
+        <svg width="40" height="40" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/>
+        </svg>
+        Fill in your details above and click Generate — output appears here.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ PACKET BUILDER VIEW ══════════════ -->
+<div id="view-packet" class="view">
+  <div class="single-col">
+
+    <div class="card">
+      <div class="card-title">Event Info</div>
+
+      <div class="form-row-3">
+        <div>
+          <label>Chapter Name</label>
+          <input type="text" id="p-chapter" placeholder="e.g. Rocky Mountain Hunters Chapter" />
+        </div>
+        <div>
+          <label>Event Name</label>
+          <input type="text" id="p-event" placeholder="e.g. Annual Banquet & Auction" />
+        </div>
+        <div>
+          <label>Event Date & Location</label>
+          <input type="text" id="p-date" placeholder="e.g. October 18, 2025 — Grand Ballroom, Tucson AZ" />
+        </div>
+      </div>
+
+      <div class="divider"></div>
+      <div class="card-title" style="margin-top:4px">Your Audience</div>
+      <p style="font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.5">Sponsors invest in your audience, not your mission. Lead with who's in the room.</p>
+
+      <div class="form-row-3">
+        <div>
+          <label>Expected Attendance</label>
+          <input type="text" id="p-attendance" placeholder="e.g. 180 guests" />
+        </div>
+        <div>
+          <label>Who attends?</label>
+          <input type="text" id="p-audience" placeholder="e.g. hunters, ranchers, landowners" />
+        </div>
+        <div>
+          <label>What do they spend money on?</label>
+          <input type="text" id="p-spending" placeholder="e.g. firearms, hunting trips, trucks" />
+        </div>
+      </div>
+
+      <div class="divider"></div>
+      <div class="card-title" style="margin-top:4px">Sponsorship Tiers</div>
+      <p style="font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.5">We've pre-filled a proven four-tier framework. Adjust names, amounts, and benefits to fit your chapter.</p>
+
+      <div class="tier-grid" id="tierRows">
+
+        <div class="tier-row">
+          <div class="tier-row-header">
+            <span class="tier-row-label">Tier 1 — Entry Level</span>
+            <label class="include-toggle"><input type="checkbox" class="t-include" checked onchange="toggleRow(this)" /><span>Include</span></label>
+          </div>
+          <label>Tier Name</label>
+          <input type="text" class="t-name" placeholder="Field Sponsor" />
+          <label>Amount</label>
+          <input type="text" class="t-amount" placeholder="$500 – $1,000" />
+          <label>What they get</label>
+          <textarea class="t-benefits" rows="2" placeholder="Name in event program, website listing, table tent at banquet, social media thank-you post"></textarea>
+        </div>
+
+        <div class="tier-row">
+          <div class="tier-row-header">
+            <span class="tier-row-label">Tier 2 — Regional</span>
+            <label class="include-toggle"><input type="checkbox" class="t-include" checked onchange="toggleRow(this)" /><span>Include</span></label>
+          </div>
+          <label>Tier Name</label>
+          <input type="text" class="t-name" placeholder="Conservation Sponsor" />
+          <label>Amount</label>
+          <input type="text" class="t-amount" placeholder="$1,500 – $3,000" />
+          <label>What they get</label>
+          <textarea class="t-benefits" rows="2" placeholder="Logo on all event materials and email campaigns, 2 tickets, named in auctioneer remarks, year-round logo on website and newsletter"></textarea>
+        </div>
+
+        <div class="tier-row">
+          <div class="tier-row-header">
+            <span class="tier-row-label">Tier 3 — Named Segment</span>
+            <label class="include-toggle"><input type="checkbox" class="t-include" checked onchange="toggleRow(this)" /><span>Include</span></label>
+          </div>
+          <label>Tier Name</label>
+          <input type="text" class="t-name" placeholder="Heritage Sponsor" />
+          <label>Amount</label>
+          <input type="text" class="t-amount" placeholder="$3,500 – $6,000" />
+          <label>What they get</label>
+          <textarea class="t-benefits" rows="2" placeholder="Named sponsor of a banquet segment, 4 tickets, reserved table, branded signage, feature in pre-event email to full chapter list"></textarea>
+        </div>
+
+        <div class="tier-row">
+          <div class="tier-row-header">
+            <span class="tier-row-label">Tier 4 — Presenting</span>
+            <label class="include-toggle"><input type="checkbox" class="t-include" checked onchange="toggleRow(this)" /><span>Include</span></label>
+          </div>
+          <label>Tier Name</label>
+          <input type="text" class="t-name" placeholder="Presenting Sponsor" />
+          <label>Amount</label>
+          <input type="text" class="t-amount" placeholder="$7,500 – $15,000" />
+          <label>What they get</label>
+          <textarea class="t-benefits" rows="2" placeholder="Naming rights to the full event, 8 tickets, VIP table, exclusive banner, 30-second address to the room, full-year digital partnership"></textarea>
+        </div>
+
+      </div>
+
+      <div class="divider"></div>
+      <div class="card-title" style="margin-top:4px">Add-On Opportunities</div>
+      <p style="font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.5">Standalone items businesses can bolt on at any tier. Uncheck any you don't want included.</p>
+
+      <div id="addonRows">
+        <div class="addon-row">
+          <label class="include-toggle addon-toggle"><input type="checkbox" class="a-include" checked onchange="toggleRow(this)" /><span></span></label>
+          <input type="text" class="a-name" placeholder="Cocktail Hour Sponsor" style="flex:2" />
+          <input type="text" class="a-amount" placeholder="$500 – $1,500" style="flex:1" />
+        </div>
+        <div class="addon-row">
+          <label class="include-toggle addon-toggle"><input type="checkbox" class="a-include" checked onchange="toggleRow(this)" /><span></span></label>
+          <input type="text" class="a-name" placeholder="Raffle Table Sponsor" style="flex:2" />
+          <input type="text" class="a-amount" placeholder="$750 – $2,000" style="flex:1" />
+        </div>
+        <div class="addon-row">
+          <label class="include-toggle addon-toggle"><input type="checkbox" class="a-include" checked onchange="toggleRow(this)" /><span></span></label>
+          <input type="text" class="a-name" placeholder="Youth Hunting Scholarship Sponsor" style="flex:2" />
+          <input type="text" class="a-amount" placeholder="$1,000 – $3,000" style="flex:1" />
+        </div>
+        <div class="addon-row">
+          <label class="include-toggle addon-toggle"><input type="checkbox" class="a-include" checked onchange="toggleRow(this)" /><span></span></label>
+          <input type="text" class="a-name" placeholder="Add another..." style="flex:2" />
+          <input type="text" class="a-amount" placeholder="Amount" style="flex:1" />
+        </div>
+      </div>
+
+      <div class="divider"></div>
+      <div class="card-title" style="margin-top:4px">Notes</div>
+      <label>Anything else to include?</label>
+      <textarea id="p-notes" rows="2" placeholder="e.g. Proceeds fund youth hunting programs. Contact info for sponsorship inquiries."></textarea>
+
+      <button class="btn-primary" id="packetBtn" onclick="generatePacket()">Build Sponsorship Packet</button>
+    </div>
+
+    <!-- Output panel -->
+    <div id="packetOutputPanel" style="margin-top:0">
+      <div class="packet-usage-note">
+        <div class="packet-usage-icon">
+          <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg>
+        </div>
+        <div>
+          <div class="packet-usage-title">This is your sponsorship packet — not an email</div>
+          <div class="packet-usage-body">Once generated, click <strong>Copy All</strong> and paste into a Word doc or Google Doc. Add your chapter logo, save as a PDF, and attach it to your follow-up emails when a sponsor asks for more information.</div>
+        </div>
+      </div>
+      <div class="output-placeholder" id="packetPlaceholder">
+        <svg width="40" height="40" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/>
+        </svg>
+        Fill in your event details above and click Build Sponsorship Packet — output appears here.
+      </div>
+    </div>
+
+    <!-- Field Notes inline -->
+    <div class="field-notes-inline">
+      <div class="tips-header" style="margin-bottom:16px">Field Notes</div>
+      <div class="field-notes-grid">
+        <div class="tip-block"><div class="tip-number">01</div><div class="tip-text"><strong>Lead with your audience.</strong> Before listing a single benefit, tell sponsors who will be in the room. Attendance numbers and demographics belong at the top of your deck — not your mission statement.</div></div>
+        <div class="tip-block"><div class="tip-number">02</div><div class="tip-text"><strong>Drop the round numbers.</strong> Price tiers at $1,500, $3,500, and $7,500 instead of $1,000, $3,000, and $5,000. Intentional pricing signals intentional packaging.</div></div>
+        <div class="tip-block"><div class="tip-number">03</div><div class="tip-text"><strong>Name your tiers after things that mean something.</strong> "Field Sponsor" tells a story. "Bronze Sponsor" tells nothing. The right name does half the selling before anyone reads the benefits.</div></div>
+        <div class="tip-block"><div class="tip-number">04</div><div class="tip-text"><strong>Start Presenting Sponsor conversations early.</strong> The best sponsorships take months to develop. If you're reaching out just weeks before your event, you're getting whatever's left in their budget.</div></div>
+        <div class="tip-block"><div class="tip-number">05</div><div class="tip-text"><strong>Build renewal in from day one.</strong> After the event, send every sponsor a one-page recap — attendance, dollars raised, where their logo appeared — with an early-bird renewal offer for next year.</div></div>
+        <div class="tip-block"><div class="tip-number">06</div><div class="tip-text"><strong>Your top-tier ask should never be an email.</strong> That conversation belongs on the phone or in person, coming from the chapter president directly. A PDF alone won't close it.</div></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════ TRACKER VIEW ══════════════ -->
+<div id="view-tracker" class="view">
+  <div class="tracker-toolbar">
+    <input type="text" class="tracker-search" id="searchInput" placeholder="Search sponsors..." oninput="renderTable()" />
+    <div class="tracker-filters">
+      <button class="filter-pill active" onclick="setFilter('all', this)">All</button>
+      <button class="filter-pill" onclick="setFilter('Not Contacted', this)">Not Contacted</button>
+      <button class="filter-pill" onclick="setFilter('Pitched', this)">Pitched</button>
+      <button class="filter-pill" onclick="setFilter('Follow-Up', this)">Follow-Up</button>
+      <button class="filter-pill" onclick="setFilter('Committed', this)">Committed</button>
+      <button class="filter-pill" onclick="setFilter('Declined', this)">Declined</button>
+    </div>
+    <button class="btn-primary" style="width:auto;padding:10px 20px" onclick="openAddModal()">+ Add Sponsor</button>
+  </div>
+
+  <div class="card" style="padding:0;overflow:hidden">
+    <table id="sponsorTable">
+      <thead>
+        <tr>
+          <th>Contact / Company</th>
+          <th>Tier</th>
+          <th>Status</th>
+          <th>Last Contacted</th>
+          <th>Notes</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+    <div id="emptyState" class="empty-state" style="display:none">
+      <p>No sponsors yet. Add your first one above.</p>
+    </div>
+  </div>
+
+  <div style="margin-top:12px;display:flex;justify-content:flex-end">
+    <button class="btn-ghost" onclick="exportCSV()">Export CSV</button>
+  </div>
+</div>
+
+<!-- ══════════════ ADD/EDIT MODAL ══════════════ -->
+<div class="modal-overlay" id="sponsorModal" onclick="closeModalOutside(event)">
+  <div class="modal">
+    <div class="modal-title" id="modalTitle">Add Sponsor</div>
+
+    <label>Company Name</label>
+    <input type="text" id="m-company" placeholder="e.g. Mesa Trophy Supply" />
+
+    <label>Contact Name</label>
+    <input type="text" id="m-contact" placeholder="e.g. Mike Harlan" />
+
+    <label>Sponsorship Tier</label>
+    <select id="m-tier">
+      <option value="">Not specified</option>
+      <option>Title Sponsor</option>
+      <option>Gold Sponsor</option>
+      <option>Silver Sponsor</option>
+      <option>Bronze Sponsor</option>
+      <option>Table Sponsor</option>
+      <option>In-Kind Donor</option>
+    </select>
+
+    <label>Amount ($)</label>
+    <input type="text" id="m-amount" placeholder="e.g. 500" />
+
+    <label>Status</label>
+    <select id="m-status">
+      <option>Not Contacted</option>
+      <option>Pitched</option>
+      <option>Follow-Up</option>
+      <option>Committed</option>
+      <option>Declined</option>
+    </select>
+
+    <label>Last Contacted</label>
+    <input type="text" id="m-date" placeholder="e.g. March 15, 2025" />
+
+    <label>Notes</label>
+    <textarea id="m-notes" rows="2" placeholder="Anything useful..."></textarea>
+
+    <div class="modal-footer">
+      <button class="btn-ghost" onclick="closeModal()">Cancel</button>
+      <button id="deleteBtn" class="btn-danger" onclick="deleteSponsor()" style="display:none">Delete</button>
+      <button class="btn-primary" style="width:auto;padding:10px 24px" onclick="saveSponsor()">Save</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast">Copied to clipboard</div>
+
+<script>
+// ── STATE ──────────────────────────────────────────────────────────────────
+let sponsors = JSON.parse(localStorage.getItem('vd_sponsors') || '[]');
+let editingId = null;
+let activeFilter = 'all';
+
+function saveSponsors() {
+  localStorage.setItem('vd_sponsors', JSON.stringify(sponsors));
+}
+
+// ── API KEY ────────────────────────────────────────────────────────────────
+// API key is stored server-side in Vercel environment variables.
+// All requests go through /api/generate proxy.
+
+window.addEventListener('DOMContentLoaded', () => {
+  renderTable();
+});
+
+// ── TABS ───────────────────────────────────────────────────────────────────
+function switchTab(tab, e) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('view-' + tab).classList.add('active');
+  const btn = e?.target || [...document.querySelectorAll('.tab-btn')].find(b => b.getAttribute('onclick')?.includes("'" + tab + "'"));
+  if (btn) btn.classList.add('active');
+}
+
+// ── GENERATOR ─────────────────────────────────────────────────────────────
+async function generateEmails() {
+  const chapter   = document.getElementById('chapterName').value.trim();
+  const event     = document.getElementById('eventName').value.trim();
+  const date      = document.getElementById('eventDate').value.trim();
+  const sponsor   = document.getElementById('sponsorName').value.trim();
+  const contact   = document.getElementById('contactName').value.trim();
+  const bizType   = document.getElementById('bizType').value.trim();
+  const notes     = document.getElementById('customNotes').value.trim();
+
+  const wantPitch         = document.getElementById('chk-pitch').checked;
+  const wantSubjects      = document.getElementById('chk-subjects').checked;
+  const wantFollowup      = document.getElementById('chk-followup').checked;
+  const mentionPacket     = document.getElementById('chk-packet-mention').checked;
+
+  if (!chapter) {
+    showToast('Add your chapter name to continue');
+    return;
+  }
+
+  const sections = [];
+  if (wantPitch)    sections.push('PITCH_EMAIL');
+  if (wantSubjects) sections.push('SUBJECT_LINES');
+  if (wantFollowup) sections.push('FOLLOWUP_EMAIL');
+
+  if (!sections.length) {
+    showToast('Select at least one output type');
+    return;
+  }
+
+  const btn = document.getElementById('generateBtn');
+  btn.disabled = true;
+  btn.textContent = 'Generating...';
+
+  const panel = document.getElementById('outputPanel');
+  panel.innerHTML = '<div class="loading-bar"></div>';
+
+  const prompt = buildPrompt({ chapter, event, date, sponsor, contact, bizType, notes, sections, mentionPacket });
+
+  try {
+    const response = await fetch('/api/generate', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1800,
+        stream: true,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+
+    panel.innerHTML = '';
+    const containers = {};
+    sections.forEach(s => {
+      const sec = createOutputSection(s);
+      panel.appendChild(sec.el);
+      containers[s] = sec.body;
+      containers[s].classList.add('streaming');
+    });
+
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = '';
+    let fullText = '';
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      buffer += decoder.decode(value, { stream: true });
+      const lines = buffer.split('\n');
+      buffer = lines.pop();
+
+      for (const line of lines) {
+        if (!line.startsWith('data: ')) continue;
+        const data = line.slice(6).trim();
+        if (data === '[DONE]') continue;
+        try {
+          const evt = JSON.parse(data);
+          if (evt.type === 'content_block_delta' && evt.delta?.text) {
+            fullText += evt.delta.text;
+            distributeText(fullText, containers, sections);
+          }
+        } catch {}
+      }
+    }
+
+    Object.values(containers).forEach(b => b.classList.remove('streaming'));
+
+  } catch (err) {
+    panel.innerHTML = `<div class="card" style="color:var(--red)">Error: ${err.message}</div>`;
+  }
+
+  btn.disabled = false;
+  btn.textContent = 'Generate Content';
+}
+
+function buildPrompt({ chapter, event, date, sponsor, contact, bizType, notes, sections, mentionPacket }) {
+  const notesLine  = notes ? `Additional context: ${notes}` : '';
+  const dateLine   = date ? `Event date: ${date}.` : '';
+  const eventLine  = event ? `Event name: ${event}.` : 'Annual banquet.';
+  const isGeneral  = !sponsor && !contact;
+  const bizDesc    = bizType || 'local business';
+  const packetLine = mentionPacket
+    ? 'At the end of the email, add one natural sentence offering to send over the full sponsorship packet with all the details if they\'re interested — keep it casual, not salesy.'
+    : '';
+
+  const sectionInstructions = {
+    PITCH_EMAIL: isGeneral
+      ? `Write a compelling, professional sponsor pitch email that works as a general template — no specific business name or contact name. Open with "Dear [Business Name]" so the chapter leader can easily swap in the real name. Keep it warm, direct, and under 180 words. Focus on the event, the audience, and why supporting this chapter is a smart move for any local ${bizDesc}. Do not mention specific sponsorship tiers or dollar amounts — keep this as a door-opener only. ${packetLine}`
+      : `Write a compelling, professional sponsor pitch email addressed to ${contact || 'the business owner'} at ${sponsor}. Keep it warm, direct, and under 180 words. Focus on the event, the audience, and why this is a smart move for them as a ${bizDesc}. Do not mention specific sponsorship tiers or dollar amounts — this email's only job is to get a response. ${packetLine}`,
+    SUBJECT_LINES: `Write 5 email subject lines for the sponsor pitch. Vary the tone: one urgency-driven, one community-focused, one benefit-focused, one question-based, one short and punchy. No emojis.`,
+    FOLLOWUP_EMAIL: isGeneral
+      ? `Write a brief, professional follow-up email (under 130 words) to send 5–7 days after the initial pitch with no response. Open with "Dear [Business Name]". Reference that a previous email was sent. Offer to send the full sponsorship packet with all the details if they'd like to take a closer look. Keep it low-pressure and easy to respond to with a simple yes or no.`
+      : `Write a brief, professional follow-up email (under 130 words) addressed to ${contact || 'the business owner'} at ${sponsor || 'the business'}, to send 5–7 days after the initial pitch with no response. Reference that a previous email was sent. Offer to send the full sponsorship packet. Keep it low-pressure and easy to respond to with a simple yes or no.`,
+  };
+
+  const instructions = sections.map(s => `--- ${s} ---\n${sectionInstructions[s]}`).join('\n\n');
+
+  return `You are writing sponsor outreach content for a hunting and conservation nonprofit chapter. These emails are first-touch outreach — the goal is simply to open a conversation, not to close a deal.
+
+Chapter: ${chapter}
+${eventLine}
+${dateLine}
+${isGeneral ? `Business type being targeted: ${bizDesc}` : `Sponsor business: ${sponsor || '[Business Name]'} (${bizDesc})`}
+${notesLine}
+
+Generate the following sections. Use the exact section header format shown (e.g. "--- PITCH_EMAIL ---"). Do not add commentary between sections.
+
+${instructions}`;
+}
+
+function distributeText(full, containers, sections) {
+  for (let i = 0; i < sections.length; i++) {
+    const key = sections[i];
+    const header = `--- ${key} ---`;
+    const nextHeader = sections[i + 1] ? `--- ${sections[i + 1]} ---` : null;
+    const start = full.indexOf(header);
+    if (start === -1) continue;
+    const contentStart = start + header.length;
+    const end = nextHeader ? full.indexOf(nextHeader) : full.length;
+    const content = full.slice(contentStart, end === -1 ? full.length : end).trim();
+    containers[key].textContent = content;
+  }
+}
+
+function createOutputSection(key) {
+  const labels = {
+    PITCH_EMAIL: 'Pitch Email',
+    SUBJECT_LINES: 'Subject Lines',
+    FOLLOWUP_EMAIL: 'Follow-Up Email',
+    TIER_DESCRIPTIONS: 'Tier Descriptions'
+  };
+  const el = document.createElement('div');
+  el.className = 'output-section';
+  el.innerHTML = `
+    <div class="output-section-header">
+      <span class="output-section-label">${labels[key]}</span>
+      <button class="btn-ghost" onclick="copySection(this)">Copy</button>
+    </div>
+    <div class="output-section-body" id="out-${key}"></div>
+  `;
+  return { el, body: el.querySelector('.output-section-body') };
+}
+
+function copySection(btn) {
+  const body = btn.closest('.output-section').querySelector('.output-section-body');
+  navigator.clipboard.writeText(body.textContent).then(() => showToast('Copied to clipboard'));
+}
+
+function copyAllSections() {
+  const bodies = document.querySelectorAll('#packetOutputPanel .output-section-body');
+  const labels = { 'pout-INTRO': 'CHAPTER INTRODUCTION', 'pout-TIERS': 'SPONSORSHIP TIERS', 'pout-ADDONS': 'ADD-ON OPPORTUNITIES', 'pout-CLOSING': 'CLOSING' };
+  let full = '';
+  bodies.forEach(b => {
+    const sectionLabel = labels[b.id] || '';
+    if (sectionLabel) full += `${sectionLabel}\n${'─'.repeat(40)}\n`;
+    full += b.textContent.trim() + '\n\n';
+  });
+  navigator.clipboard.writeText(full.trim()).then(() => showToast('Full packet copied'));
+}
+
+// ── SPONSOR FINDER ─────────────────────────────────────────────────────────
+function updateCityButtons() {
+  const city = (document.getElementById('cityInput')?.value || '').trim();
+  const hint = document.getElementById('cityHint');
+
+  document.querySelectorAll('.find-btn[data-query]').forEach(a => {
+    const query = a.getAttribute('data-query');
+    const fullQuery = city ? `${query} ${city}` : query;
+    a.href = 'https://www.google.com/maps/search/' + encodeURIComponent(fullQuery);
+  });
+
+  if (city) {
+    hint.style.display = 'flex';
+    setTimeout(() => { hint.style.display = 'none'; }, 2000);
+  }
+}
+
+
+// ── PACKET BUILDER ─────────────────────────────────────────────────────────
+function toggleRow(checkbox) {
+  const row = checkbox.closest('.tier-row, .addon-row');
+  if (checkbox.checked) {
+    row.classList.remove('excluded');
+  } else {
+    row.classList.add('excluded');
+  }
+}
+async function generatePacket() {
+  const chapter   = document.getElementById('p-chapter').value.trim();
+  const event     = document.getElementById('p-event').value.trim();
+  const date      = document.getElementById('p-date').value.trim();
+  const attendance= document.getElementById('p-attendance').value.trim();
+  const audience  = document.getElementById('p-audience').value.trim();
+  const spending  = document.getElementById('p-spending').value.trim();
+  const notes     = document.getElementById('p-notes').value.trim();
+
+  if (!chapter || !event) {
+    showToast('Add chapter name and event name to continue');
+    return;
+  }
+
+  // Collect tiers — only included ones, use placeholder as fallback
+  const tierRows = document.querySelectorAll('.tier-row');
+  const tiers = [];
+  tierRows.forEach((row, i) => {
+    const includeEl = row.querySelector('.t-include');
+    if (includeEl && !includeEl.checked) return;
+    const nameEl     = row.querySelector('.t-name');
+    const amountEl   = row.querySelector('.t-amount');
+    const benefitsEl = row.querySelector('.t-benefits');
+    const name     = nameEl.value.trim()     || nameEl.placeholder;
+    const amount   = amountEl.value.trim()   || amountEl.placeholder;
+    const benefits = benefitsEl.value.trim() || benefitsEl.placeholder;
+    tiers.push({ name, amount, benefits });
+  });
+
+  // Collect add-ons — only included ones
+  const addonRows = document.querySelectorAll('.addon-row');
+  const addons = [];
+  addonRows.forEach(row => {
+    const includeEl = row.querySelector('.a-include');
+    if (includeEl && !includeEl.checked) return;
+    const name   = row.querySelector('.a-name').value.trim();
+    const amount = row.querySelector('.a-amount').value.trim();
+    if (name) addons.push({ name, amount });
+  });
+
+  const btn = document.getElementById('packetBtn');
+  btn.disabled = true;
+  btn.textContent = 'Building...';
+
+  if (!tiers.length) {
+    showToast('Include at least one sponsorship tier');
+    btn.disabled = false;
+    btn.textContent = 'Build Sponsorship Packet';
+    return;
+  }
+
+  const panel = document.getElementById('packetOutputPanel');
+  const placeholder = document.getElementById('packetPlaceholder');
+  if (placeholder) placeholder.style.display = 'none';
+  panel.innerHTML = '<div class="loading-bar"></div>';
+
+  const tiersText = tiers.map(t =>
+    `${t.name}${t.amount ? ' (' + t.amount + ')' : ''}: ${t.benefits || 'benefits not specified'}`
+  ).join('\n');
+
+  const addonsText = addons.length
+    ? addons.map(a => `${a.name}${a.amount ? ' — ' + a.amount : ''}`).join('\n')
+    : 'None specified';
+
+  const audienceBlock = [
+    attendance ? `Attendance: ${attendance}` : '',
+    audience   ? `Who attends: ${audience}` : '',
+    spending   ? `What they spend money on: ${spending}` : '',
+  ].filter(Boolean).join('\n');
+
+  const sections = ['INTRO', 'TIERS', 'ADDONS', 'CLOSING'];
+
+  const prompt = `You are writing a polished, persuasive sponsorship packet for a hunting and conservation nonprofit chapter banquet. You understand that sponsors are making a marketing investment, not a donation — so everything should be framed around business value and audience access.
+
+Chapter: ${chapter}
+Event: ${event}
+${date ? 'Date & Location: ' + date : ''}
+
+AUDIENCE (lead with this — it is the most important selling point):
+${audienceBlock || 'A room full of dedicated hunters and outdoor enthusiasts'}
+
+Tiers:
+${tiersText}
+
+Add-on opportunities:
+${addonsText}
+
+${notes ? 'Additional notes: ' + notes : ''}
+
+Write the sponsorship packet in these exact sections:
+
+--- INTRO ---
+Two short paragraphs, under 130 words total. Paragraph one: who is in the room and why that audience is genuinely valuable to local and regional businesses. Lead with attendance number and audience description — not the chapter's history. Make the business case immediately. Paragraph two: what the event is, when and where it happens, and a single sentence on what the chapter does for conservation. End with a confident one-line invitation to become a sponsor. No generic nonprofit language.
+
+--- TIERS ---
+For each tier: write the tier name in bold (or all-caps), the price range, then 3–5 sentences of polished, specific benefit copy. Make each tier feel like a meaningfully different level of partnership — not just more logo placements. Use the tier name to convey identity (e.g. "Field Sponsor" positions the business as embedded in the hunting community). Note who each tier is best suited for at the end (e.g. "Best for: local outfitters, gun shops, and regional outdoor brands.").
+
+--- ADDONS ---
+Write a short intro sentence, then list each add-on with its name, price range, and one compelling sentence describing what the sponsor gets and why it's valuable. Keep this section punchy — it should feel like bonus opportunities, not another tier list.
+
+--- CLOSING ---
+One tight paragraph under 80 words. Tell them exactly how to move forward (contact info placeholder like [Name] at [email] or [phone]). Create a light sense of urgency — sponsorship slots are limited, especially at upper tiers. Thank them for investing in the hunting community. End with something that feels like a real person wrote it, not a committee.`;
+
+  try {
+    const response = await fetch('/api/generate', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 2400,
+        stream: true,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+
+    panel.innerHTML = '';
+
+    // Copy All bar
+    const copyBar = document.createElement('div');
+    copyBar.className = 'copy-all-bar';
+    copyBar.innerHTML = `
+      <span>Paste into Word or Google Docs, add your logo, save as PDF</span>
+      <button class="btn-copy-all" onclick="copyAllSections()">Copy All</button>
+    `;
+    panel.appendChild(copyBar);
+
+    const labels = {
+      INTRO:   'Chapter Introduction',
+      TIERS:   'Sponsorship Tiers',
+      ADDONS:  'Add-On Opportunities',
+      CLOSING: 'Closing & Call to Action'
+    };
+    const containers = {};
+
+    sections.forEach(s => {
+      const el = document.createElement('div');
+      el.className = 'output-section';
+      el.innerHTML = `
+        <div class="output-section-header">
+          <span class="output-section-label">${labels[s]}</span>
+          <button class="btn-ghost" onclick="copySection(this)">Copy</button>
+        </div>
+        <div class="output-section-body streaming" id="pout-${s}"></div>
+      `;
+      panel.appendChild(el);
+      containers[s] = el.querySelector('.output-section-body');
+    });
+
+    const reader  = response.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = '', fullText = '';
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      buffer += decoder.decode(value, { stream: true });
+      const lines = buffer.split('\n');
+      buffer = lines.pop();
+      for (const line of lines) {
+        if (!line.startsWith('data: ')) continue;
+        const data = line.slice(6).trim();
+        if (data === '[DONE]') continue;
+        try {
+          const evt = JSON.parse(data);
+          if (evt.type === 'content_block_delta' && evt.delta?.text) {
+            fullText += evt.delta.text;
+            distributeText(fullText, containers, sections);
+          }
+        } catch {}
+      }
+    }
+
+    Object.values(containers).forEach(b => b.classList.remove('streaming'));
+
+    // What's next banner
+    const nextBanner = document.createElement('div');
+    nextBanner.className = 'whats-next-banner';
+    nextBanner.innerHTML = `
+      <div class="whats-next-content">
+        <div class="whats-next-icon">✓</div>
+        <div>
+          <div class="whats-next-title">Your sponsorship packet is ready</div>
+          <div class="whats-next-body">Click Copy All above to grab the full text, then paste it into a Word doc or Google Doc. Once your packet is saved as a PDF, head over to Write Emails to start reaching out to sponsors.</div>
+        </div>
+      </div>
+      <button class="btn-cream" onclick="switchTab('generator', event)" style="white-space:nowrap;flex-shrink:0">Write Emails &rarr;</button>
+    `;
+    panel.appendChild(nextBanner);
+
+  } catch (err) {
+    panel.innerHTML = `<div class="card" style="color:var(--red)">Error: ${err.message}</div>`;
+  }
+
+  btn.disabled = false;
+  btn.textContent = 'Build Sponsorship Packet';
+}
+
+const STATUSES = ['Not Contacted', 'Pitched', 'Follow-Up', 'Committed', 'Declined'];
+const STATUS_CLASSES = {
+  'Not Contacted': 'status-not-contacted',
+  'Pitched':       'status-pitched',
+  'Committed':     'status-committed',
+  'Declined':      'status-declined',
+  'Follow-Up':     'status-follow-up'
+};
+
+function setFilter(f, btn) {
+  activeFilter = f;
+  document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  renderTable();
+}
+
+function renderTable() {
+  const query = (document.getElementById('searchInput')?.value || '').toLowerCase();
+  let rows = sponsors;
+  if (activeFilter !== 'all') rows = rows.filter(s => s.status === activeFilter);
+  if (query) rows = rows.filter(s =>
+    (s.company + s.contact + s.notes).toLowerCase().includes(query)
+  );
+
+  const tbody = document.getElementById('tableBody');
+  tbody.innerHTML = '';
+
+  if (!rows.length) {
+    document.getElementById('emptyState').style.display = 'block';
+    return;
+  }
+  document.getElementById('emptyState').style.display = 'none';
+
+  rows.forEach(s => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>
+        <div style="font-weight:600;font-size:13px">${esc(s.company)}</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:2px">${esc(s.contact)}</div>
+      </td>
+      <td>${s.tier ? `<span class="tier-chip">${esc(s.tier)}</span>` : '<span style="color:var(--muted);font-size:12px">—</span>'}</td>
+      <td><span class="status-badge ${STATUS_CLASSES[s.status] || ''}">${esc(s.status)}</span></td>
+      <td style="color:${s.date ? 'var(--offblk)' : 'var(--muted)'};font-size:12px">${esc(s.date || '—')}</td>
+      <td style="color:var(--muted);font-size:12px;max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(s.notes || '—')}</td>
+      <td><button class="btn-ghost" onclick="openEditModal('${s.id}')">Edit</button></td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function esc(str) {
+  return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// ── MODAL ──────────────────────────────────────────────────────────────────
+function openAddModal() {
+  editingId = null;
+  document.getElementById('modalTitle').textContent = 'Add Sponsor';
+  document.getElementById('deleteBtn').style.display = 'none';
+  ['m-company','m-contact','m-amount','m-date','m-notes'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('m-tier').value = '';
+  document.getElementById('m-status').value = 'Not Contacted';
+  document.getElementById('sponsorModal').classList.add('open');
+}
+
+function openEditModal(id) {
+  const s = sponsors.find(x => x.id === id);
+  if (!s) return;
+  editingId = id;
+  document.getElementById('modalTitle').textContent = 'Edit Sponsor';
+  document.getElementById('deleteBtn').style.display = 'inline-block';
+  document.getElementById('m-company').value = s.company || '';
+  document.getElementById('m-contact').value = s.contact || '';
+  document.getElementById('m-tier').value   = s.tier || '';
+  document.getElementById('m-amount').value = s.amount || '';
+  document.getElementById('m-status').value = s.status || 'Not Contacted';
+  document.getElementById('m-date').value   = s.date || '';
+  document.getElementById('m-notes').value  = s.notes || '';
+  document.getElementById('sponsorModal').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('sponsorModal').classList.remove('open');
+}
+function closeModalOutside(e) {
+  if (e.target === document.getElementById('sponsorModal')) closeModal();
+}
+
+function saveSponsor() {
+  const data = {
+    company: document.getElementById('m-company').value.trim(),
+    contact: document.getElementById('m-contact').value.trim(),
+    tier:    document.getElementById('m-tier').value,
+    amount:  document.getElementById('m-amount').value.trim(),
+    status:  document.getElementById('m-status').value,
+    date:    document.getElementById('m-date').value.trim(),
+    notes:   document.getElementById('m-notes').value.trim()
+  };
+  if (!data.company) { showToast('Company name is required'); return; }
+
+  if (editingId) {
+    const idx = sponsors.findIndex(s => s.id === editingId);
+    if (idx !== -1) sponsors[idx] = { ...sponsors[idx], ...data };
+  } else {
+    data.id = 'sp_' + Date.now();
+    sponsors.push(data);
+  }
+  saveSponsors();
+  renderTable();
+  closeModal();
+  showToast(editingId ? 'Sponsor updated' : 'Sponsor added');
+}
+
+function deleteSponsor() {
+  if (!editingId) return;
+  if (!confirm('Remove this sponsor from your tracker?')) return;
+  sponsors = sponsors.filter(s => s.id !== editingId);
+  saveSponsors();
+  renderTable();
+  closeModal();
+  showToast('Sponsor removed');
+}
+
+// ── CSV EXPORT ─────────────────────────────────────────────────────────────
+function exportCSV() {
+  const headers = ['Company','Contact','Tier','Amount','Status','Last Contacted','Notes'];
+  const rows = sponsors.map(s => [s.company, s.contact, s.tier, s.amount, s.status, s.date, s.notes].map(v => `"${(v||'').replace(/"/g,'""')}"`));
+  const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'sponsors.csv'; a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ── TOAST ──────────────────────────────────────────────────────────────────
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+</script>
+</body>
+</html>
