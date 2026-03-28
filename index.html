@@ -1633,6 +1633,7 @@ function switchTab(tab, e) {
   document.getElementById('view-' + tab).classList.add('active');
   const btn = e?.target || [...document.querySelectorAll('.tab-btn')].find(b => b.getAttribute('onclick')?.includes("'" + tab + "'"));
   if (btn) btn.classList.add('active');
+  window.scrollTo(0, 0);
 }
 
 // ── GENERATOR ─────────────────────────────────────────────────────────────
